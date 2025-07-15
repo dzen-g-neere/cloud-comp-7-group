@@ -1,0 +1,42 @@
+server:
+  port: 8081
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - name: gateway-service
+        url: /v3/api-docs
+      - name: security-service
+        url: /security-swagger/v3/api-docs
+      - name: data-service
+        url: /data-swagger/v3/api-docs
+
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - AddResponseHeader=X-Gateway-Service, EgorS-Gateway
+      routes:
+        - id: security-service
+          uri: http://security-service:8083
+          predicates:
+            - Path=/security-swagger/**, /auth/**
+        - id: data-service
+          uri: http://data-service:8084
+          predicates:
+            - Path=/data-swagger/**, /post-questionnaires/**, /diagnostic-sheets/**, /pre-questionnaires/**, /api/**, /management/users-by-maker, /diagram-detail-changes/**
+          filters:
+            - AddRequestHeader=X-API-KEY,SuperSecretApiWord
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: classpath:public.pem
+
+secret-api:
+  key: SuperSecretApiWord
