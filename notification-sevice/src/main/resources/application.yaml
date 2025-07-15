@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: ietec_cdc
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ietecproject@gmail.com
+    password: pdpsapywgohwwcrt
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
+server:
+  port: 8085
+
+frontend:
+  url: http://localhost:5173

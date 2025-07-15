@@ -1,0 +1,30 @@
+springdoc:
+  swagger-ui:
+    path: /security-swagger/swagger-ui
+  api-docs:
+    path: /security-swagger/v3/api-docs
+
+spring:
+  application:
+    name: security-service
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ietecusers
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+server:
+  port: 8083
+
+jwt:
+  secret: secret
+
+aes:
+  password: MySuperSecretPassword123!
