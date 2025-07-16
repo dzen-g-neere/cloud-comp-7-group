@@ -78,14 +78,6 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Encoding the password
         user.setCreationDate(LocalDateTime.now());
 
-        if (user.getRole() == Role.ROLE_CREATOR) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("X-API-KEY", "SuperSecretApiWord");
-            HttpEntity<Maker> entity = new HttpEntity<>(new Maker(user.getUserId(), user.getCompanyName()), headers);
-            restTemplate.postForEntity("http://data-service:8084/management/create-maker", entity, String.class); // Sending Data to the Data Service
-        }
-
         userRepository.save(user); // Saving the user into the database
         log.info("User created: Email: {}", user.getEmail());
     }

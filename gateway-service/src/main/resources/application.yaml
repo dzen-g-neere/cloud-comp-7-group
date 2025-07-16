@@ -17,17 +17,19 @@ springdoc:
         url: /data-swagger/v3/api-docs
 
 spring:
+  application:
+    name: gateway-service
   cloud:
     gateway:
       default-filters:
         - AddResponseHeader=X-Gateway-Service, EgorS-Gateway
       routes:
         - id: security-service
-          uri: http://security-service:8083
+          uri: lb://security-service:8083
           predicates:
             - Path=/security-swagger/**, /auth/**
         - id: data-service
-          uri: http://data-service:8084
+          uri: lb://data-service:8084
           predicates:
             - Path=/data-swagger/**, /post-questionnaires/**, /diagnostic-sheets/**, /pre-questionnaires/**, /api/**, /management/users-by-maker, /diagram-detail-changes/**
           filters:

@@ -57,12 +57,11 @@ public class EmailService {
         String htmlContent = templateEngine.process("reset_password", context);
         helper.setText(htmlContent, true);
 
-        // Bild-Einbindung entfernt
-        // ClassPathResource image = new ClassPathResource("IETEC_OnlinePortal_Negativ.png");
-        // if (!image.exists()) {
-        //     throw new FileNotFoundException("Image was not found!");
-        // }
-        // helper.addInline("logoImage", image, "image/png");
+         ClassPathResource image = new ClassPathResource("IETEC_OnlinePortal_Negativ.png");
+         if (!image.exists()) {
+             log.error("Logo image not found in classpath. Please ensure the image is located in the resources directory.");
+         }
+         helper.addInline("logoImage", image, "image/png");
 
         emailSender.send(message);
         log.info("Reset password email sent to: {}", mailRequest.getEmail());

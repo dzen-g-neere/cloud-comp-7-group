@@ -17,6 +17,8 @@ springdoc:
         url: /data-swagger/v3/api-docs
 
 spring:
+  application:
+    name: gateway-service
   cloud:
     gateway:
       default-filters:
