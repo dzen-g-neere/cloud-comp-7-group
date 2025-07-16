@@ -19,3 +19,12 @@ server:
 
 frontend:
   url: http://localhost:5173
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.255.10:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: true

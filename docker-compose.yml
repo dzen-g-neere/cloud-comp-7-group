@@ -1,0 +1,85 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ietecusers
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  security-service:
+    build:
+      context: ./security-service
+      dockerfile: Dockerfile
+    container_name: security-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8083:8083"
+    networks:
+      - app-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+    depends_on:
+      - security-service
+    restart: unless-stopped
+
+  notification-service:
+    build:
+      context: ./notification-sevice
+      dockerfile: Dockerfile
+    container_name: notification-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8085:8085"
+    networks:
+      - app-network
+    depends_on:
+      - security-service
+    restart: unless-stopped
+
+  eureka-service:
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    container_name: eureka-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8761:8761"
+    networks:
+      - app-network
+    depends_on:
+      - security-service
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge

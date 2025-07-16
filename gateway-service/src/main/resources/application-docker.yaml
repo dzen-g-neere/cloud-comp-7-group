@@ -25,11 +25,11 @@ spring:
         - AddResponseHeader=X-Gateway-Service, EgorS-Gateway
       routes:
         - id: security-service
-          uri: http://security-service:8083
+          uri: lb://security-service:8083
           predicates:
             - Path=/security-swagger/**, /auth/**
         - id: data-service
-          uri: http://data-service:8084
+          uri: lb://data-service:8084
           predicates:
             - Path=/data-swagger/**, /post-questionnaires/**, /diagnostic-sheets/**, /pre-questionnaires/**, /api/**, /management/**, /diagram-detail-changes/**
           filters:
@@ -42,3 +42,12 @@ spring:
 
 secret-api:
   key: SuperSecretApiWord
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.255.10:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: true
